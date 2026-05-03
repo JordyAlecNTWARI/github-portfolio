@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>MediaTek</title>
+</head>
+<body>
+
+<h1>📚 Liste des livres</h1>
+
+<button onclick="loadLivres()">Afficher les livres</button>
+
+<ul id="livres"></ul>
+
+<h2>➕ Ajouter un livre</h2>
+
+<input id="title" placeholder="Titre">
+<input id="author" placeholder="Auteur">
+<input id="genre" placeholder="Genre">
+<button onclick="addLivre()">Ajouter</button>
+
+<script>
+    const API = "http://127.0.0.1:8000/api";
+
+    function loadLivres() {
+        fetch(API + "/livres")
+            .then(res => res.json())
+            .then(data => {
+                const list = document.getElementById("livres");
+                list.innerHTML = "";
+
+                data.forEach(livre => {
+                    const li = document.createElement("li");
+
+                    li.innerHTML = `
+                    ${livre.title} - ${livre.author} (${livre.genre})
+                    [${livre.disponible ? "Disponible" : "Indisponible"}]
+
+                    <button onclick="emprunter(${livre.id})">Emprunter</button>
+                `;
+
+                    list.appendChild(li);
+                });
+            });
+    }
+
+    function addLivre() {
+        fetch(API + "/livres", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                title: document.getElementById("title").value,
+                author: document.getElementById("author").value,
+                genre: document.getElementById("genre").value,
+                disponible: true
+            })
+        }).then(() => loadLivres());
+    }
+
+    function emprunter(livreId) {
+        fetch(API + "/emprunts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                utilisateur_id: 1,
+                livre_id: livreId
+            })
+        }).then(() => loadLivres());
+    }
+</script>
+
+</body>
+</html>
