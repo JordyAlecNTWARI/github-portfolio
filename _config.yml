@@ -1,0 +1,1 @@
+exclude: ['projects/cbkl-labs-monorepo/node_modules', 'projects/cbkl-labs-monorepo/packages/*/node_modules']
