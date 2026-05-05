@@ -1,73 +1,224 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>MediaTek</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MediaTek86 — Gestion de médiathèque</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0f; --surface: #111118; --border: #1e1e2e;
+      --accent: #7c6dfa; --accent2: #fa6d9a; --text: #e8e8f0;
+      --muted: #6b6b80; --green: #4dffa0; --red: #ff6d6d;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; font-size: 14px; line-height: 1.7; min-height: 100vh; }
+    body::after { content: ''; position: fixed; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 60px 60px; opacity: 0.2; pointer-events: none; z-index: 0; }
+    .glow { position: fixed; width: 500px; height: 500px; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; }
+    .glow-1 { background: radial-gradient(circle, rgba(124,109,250,0.12) 0%, transparent 70%); top: -150px; left: -100px; }
+    .glow-2 { background: radial-gradient(circle, rgba(250,109,154,0.08) 0%, transparent 70%); bottom: -150px; right: -100px; }
+    nav { position: sticky; top: 0; z-index: 100; padding: 18px 32px; display: flex; align-items: center; justify-content: space-between; backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); background: rgba(10,10,15,0.85); }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; color: var(--text); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+    .nav-back { color: var(--muted); text-decoration: none; font-size: 13px; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+    .nav-back:hover { color: var(--text); }
+    .container { max-width: 960px; margin: 0 auto; padding: 48px 32px; position: relative; z-index: 1; }
+    .page-header { margin-bottom: 48px; }
+    .page-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(124,109,250,0.08); border: 1px solid rgba(124,109,250,0.2); color: var(--accent); padding: 5px 12px; border-radius: 100px; font-size: 11px; margin-bottom: 16px; }
+    .demo-banner { background: rgba(77,255,160,0.06); border: 1px solid rgba(77,255,160,0.2); border-radius: 8px; padding: 14px 18px; color: var(--green); font-size: 12px; margin-bottom: 32px; display: flex; align-items: center; gap: 10px; }
+    .page-title { font-family: 'Syne', sans-serif; font-size: 42px; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 8px; }
+    .page-desc { color: var(--muted); font-size: 14px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px; }
+    @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; }
+    .card-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .card-title-icon { width: 32px; height: 32px; border-radius: 6px; background: rgba(124,109,250,0.1); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+    .form-input { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 13px; outline: none; transition: border-color 0.2s; }
+    .form-input:focus { border-color: var(--accent); }
+    .form-input::placeholder { color: var(--muted); }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 13px; border: none; cursor: pointer; transition: all 0.2s; width: 100%; justify-content: center; margin-top: 6px; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #6a5ce8; }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+    .btn-sm { padding: 5px 12px; font-size: 11px; width: auto; margin-top: 0; border-radius: 4px; }
+    .table-section { margin-top: 8px; }
+    .table-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .table-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; }
+    .badge { background: rgba(124,109,250,0.1); border: 1px solid rgba(124,109,250,0.2); color: var(--accent); padding: 3px 10px; border-radius: 100px; font-size: 11px; }
+    .badge-green { background: rgba(77,255,160,0.08); border-color: rgba(77,255,160,0.2); color: var(--green); }
+    .badge-red { background: rgba(255,109,109,0.08); border-color: rgba(255,109,109,0.2); color: var(--red); }
+    table { width: 100%; border-collapse: collapse; }
+    thead th { text-align: left; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+    tbody tr { border-bottom: 1px solid rgba(30,30,46,0.5); transition: background 0.15s; }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+    tbody td { padding: 12px 14px; color: var(--muted); font-size: 13px; }
+    tbody td:first-child { color: var(--text); }
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 20px; font-size: 13px; color: var(--text); z-index: 999; transform: translateY(80px); opacity: 0; transition: all 0.3s; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-color: rgba(77,255,160,0.3); color: var(--green); }
+    .toast.error { border-color: rgba(255,109,109,0.3); color: var(--red); }
+  </style>
 </head>
 <body>
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+  <div id="toast" class="toast"></div>
 
-<h1>📚 Liste des livres</h1>
+  <nav>
+    <a href="../index.html" class="nav-logo">Jordy<span>.</span>Alec</a>
+    <a href="../index.html" class="nav-back">← Retour au portfolio</a>
+  </nav>
 
-<button onclick="loadLivres()">Afficher les livres</button>
+  <div class="container">
+    <div class="page-header">
+      <div class="page-tag">Projet scolaire · PHP / Symfony</div>
+      <h1 class="page-title">MediaTek86</h1>
+      <p class="page-desc">Application de gestion de médiathèque — API REST Symfony</p>
+    </div>
 
-<ul id="livres"></ul>
+    <div class="demo-banner">
+      ✦ Mode démonstration — données simulées (l'API Symfony tourne en local en environnement réel)
+    </div>
 
-<h2>➕ Ajouter un livre</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="card-title">
+          <div class="card-title-icon">📖</div>
+          Ajouter un livre
+        </div>
+        <div class="form-group">
+          <label class="form-label">Titre</label>
+          <input id="title" class="form-input" placeholder="Ex: Le Petit Prince" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Auteur</label>
+          <input id="author" class="form-input" placeholder="Ex: Antoine de Saint-Exupéry" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Genre</label>
+          <input id="genre" class="form-input" placeholder="Ex: Roman, Science-fiction..." />
+        </div>
+        <button class="btn btn-primary" onclick="addLivre()">Ajouter le livre</button>
+      </div>
 
-<input id="title" placeholder="Titre">
-<input id="author" placeholder="Auteur">
-<input id="genre" placeholder="Genre">
-<button onclick="addLivre()">Ajouter</button>
+      <div class="card">
+        <div class="card-title">
+          <div class="card-title-icon">📊</div>
+          Aperçu du catalogue
+        </div>
+        <div id="stats"></div>
+      </div>
+    </div>
 
-<script>
-    const API = "http://127.0.0.1:8000/api";
+    <div class="table-section">
+      <div class="table-header">
+        <div class="table-title">Catalogue</div>
+        <span id="count-badge" class="badge">0 livre(s)</span>
+      </div>
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <table>
+          <thead>
+            <tr>
+              <th>Titre</th>
+              <th>Auteur</th>
+              <th>Genre</th>
+              <th>Statut</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="livres-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-    function loadLivres() {
-        fetch(API + "/livres")
-            .then(res => res.json())
-            .then(data => {
-                const list = document.getElementById("livres");
-                list.innerHTML = "";
+  <script>
+    let livres = [
+      { id: 1, title: "Le Petit Prince", author: "Antoine de Saint-Exupéry", genre: "Roman", disponible: true },
+      { id: 2, title: "1984", author: "George Orwell", genre: "Dystopie", disponible: false },
+      { id: 3, title: "Dune", author: "Frank Herbert", genre: "Science-fiction", disponible: true },
+      { id: 4, title: "L'Étranger", author: "Albert Camus", genre: "Roman", disponible: true },
+      { id: 5, title: "Harry Potter T1", author: "J.K. Rowling", genre: "Fantasy", disponible: false },
+    ];
+    let nextId = 6;
 
-                data.forEach(livre => {
-                    const li = document.createElement("li");
+    function showToast(msg, type = 'success') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = `toast ${type} show`;
+      setTimeout(() => t.className = 'toast', 3000);
+    }
 
-                    li.innerHTML = `
-                    ${livre.title} - ${livre.author} (${livre.genre})
-                    [${livre.disponible ? "Disponible" : "Indisponible"}]
+    function renderStats() {
+      const dispo = livres.filter(l => l.disponible).length;
+      const emprunte = livres.length - dispo;
+      document.getElementById('stats').innerHTML = `
+        <div style="display:grid;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(255,255,255,0.02);border-radius:6px;border:1px solid var(--border)">
+            <span style="color:var(--muted);font-size:12px">Total livres</span>
+            <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--accent)">${livres.length}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(255,255,255,0.02);border-radius:6px;border:1px solid var(--border)">
+            <span style="color:var(--muted);font-size:12px">Disponibles</span>
+            <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--green)">${dispo}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(255,255,255,0.02);border-radius:6px;border:1px solid var(--border)">
+            <span style="color:var(--muted);font-size:12px">Empruntés</span>
+            <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--red)">${emprunte}</span>
+          </div>
+        </div>`;
+    }
 
-                    <button onclick="emprunter(${livre.id})">Emprunter</button>
-                `;
-
-                    list.appendChild(li);
-                });
-            });
+    function renderTable() {
+      const tbody = document.getElementById('livres-body');
+      document.getElementById('count-badge').textContent = `${livres.length} livre(s)`;
+      tbody.innerHTML = livres.map(livre => `
+        <tr>
+          <td>${livre.title}</td>
+          <td>${livre.author}</td>
+          <td>${livre.genre}</td>
+          <td><span class="badge ${livre.disponible ? 'badge-green' : 'badge-red'}">${livre.disponible ? 'Disponible' : 'Emprunté'}</span></td>
+          <td>
+            ${livre.disponible
+              ? `<button class="btn btn-primary btn-sm" onclick="emprunter(${livre.id})">Emprunter</button>`
+              : `<button class="btn btn-ghost btn-sm" onclick="retourner(${livre.id})">Retourner</button>`
+            }
+          </td>
+        </tr>
+      `).join('');
+      renderStats();
     }
 
     function addLivre() {
-        fetch(API + "/livres", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                title: document.getElementById("title").value,
-                author: document.getElementById("author").value,
-                genre: document.getElementById("genre").value,
-                disponible: true
-            })
-        }).then(() => loadLivres());
+      const title = document.getElementById('title').value.trim();
+      const author = document.getElementById('author').value.trim();
+      const genre = document.getElementById('genre').value.trim();
+      if (!title || !author || !genre) { showToast('Veuillez remplir tous les champs', 'error'); return; }
+      livres.push({ id: nextId++, title, author, genre, disponible: true });
+      document.getElementById('title').value = '';
+      document.getElementById('author').value = '';
+      document.getElementById('genre').value = '';
+      showToast('Livre ajouté avec succès ✓');
+      renderTable();
     }
 
-    function emprunter(livreId) {
-        fetch(API + "/emprunts", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                utilisateur_id: 1,
-                livre_id: livreId
-            })
-        }).then(() => loadLivres());
+    function emprunter(id) {
+      livres = livres.map(l => l.id === id ? { ...l, disponible: false } : l);
+      showToast('Emprunt enregistré ✓');
+      renderTable();
     }
-</script>
 
+    function retourner(id) {
+      livres = livres.map(l => l.id === id ? { ...l, disponible: true } : l);
+      showToast('Livre retourné ✓');
+      renderTable();
+    }
+
+    renderTable();
+  </script>
 </body>
 </html>
