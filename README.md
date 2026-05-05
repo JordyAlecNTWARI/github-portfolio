@@ -21,14 +21,13 @@ Module KYC (Know Your Customer) développé en Proof of Concept lors de mon stag
 **Stack technique :**
 - TypeScript, Bun, Hono
 - NX Monorepo (`@cbkl/kyc`, `@cbkl/common`)
-- Tesseract.js (OCR)
 - Clean Architecture (Domain / Application / Infrastructure / Adapters)
 
 **Réalisations :**
 - Structuration d'un monorepo NX en packages indépendants
-- API REST `POST /kyc/upload` avec upload de documents
+- API REST `POST /kyc/upload` avec upload de documents d'identité
 - Entités métier comportementales : `KycRequest`, `OcrData`, `ScoringResult`
-- Pipeline OCR pour extraction de données sur documents d'identité
+- Scoring de risque automatique sur les demandes KYC
 - Workflow Git professionnel : branches `feature/`, commits conventionnels, PRs
 
 **Architecture du projet :**
