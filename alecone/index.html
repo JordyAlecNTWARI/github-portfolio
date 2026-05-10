@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AlecOne — Démo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0f; --surface: #111118; --border: #1e1e2e;
+      --accent: #7c6dfa; --accent2: #fa6d9a; --text: #e8e8f0;
+      --muted: #6b6b80; --green: #4dffa0; --red: #ff6d6d; --yellow: #ffd166;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; font-size: 14px; line-height: 1.7; min-height: 100vh; }
+    body::after { content: ''; position: fixed; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 60px 60px; opacity: 0.15; pointer-events: none; z-index: 0; }
+    .glow { position: fixed; width: 500px; height: 500px; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; }
+    .glow-1 { background: radial-gradient(circle, rgba(124,109,250,0.12) 0%, transparent 70%); top: -150px; left: -100px; }
+    .glow-2 { background: radial-gradient(circle, rgba(250,109,154,0.08) 0%, transparent 70%); bottom: -150px; right: -100px; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); background: rgba(10,10,15,0.9); }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; color: var(--text); text-decoration: none; cursor: pointer; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 8px; align-items: center; }
+    .nav-btn { padding: 8px 16px; border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 12px; border: none; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .nav-btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .nav-btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+    .nav-btn-primary { background: var(--accent); color: #fff; }
+    .nav-btn-primary:hover { background: #6a5ce8; }
+    .nav-btn-danger { background: rgba(255,109,109,0.1); color: var(--red); border: 1px solid rgba(255,109,109,0.2); }
+    .demo-badge { background: rgba(77,255,160,0.08); border: 1px solid rgba(77,255,160,0.2); color: var(--green); padding: 4px 10px; border-radius: 100px; font-size: 11px; }
+
+    /* CONTAINER */
+    .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; position: relative; z-index: 1; }
+
+    /* PAGES */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* CARDS */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; transition: all 0.3s; position: relative; overflow: hidden; }
+    .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); opacity: 0; transition: opacity 0.3s; }
+    .card:hover { border-color: rgba(124,109,250,0.3); transform: translateY(-2px); }
+    .card:hover::before { opacity: 1; }
+
+    /* GRID */
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+    /* BADGES */
+    .badge { padding: 3px 10px; border-radius: 100px; font-size: 11px; }
+    .badge-green { background: rgba(77,255,160,0.08); border: 1px solid rgba(77,255,160,0.2); color: var(--green); }
+    .badge-red { background: rgba(255,109,109,0.08); border: 1px solid rgba(255,109,109,0.2); color: var(--red); }
+    .badge-accent { background: rgba(124,109,250,0.1); border: 1px solid rgba(124,109,250,0.2); color: var(--accent); }
+    .badge-yellow { background: rgba(255,209,102,0.1); border: 1px solid rgba(255,209,102,0.2); color: var(--yellow); }
+
+    /* FORMS */
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+    .form-input { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 13px; outline: none; transition: border-color 0.2s; }
+    .form-input:focus { border-color: var(--accent); }
+    .form-input::placeholder { color: var(--muted); }
+    select.form-input option { background: var(--surface); }
+
+    /* BUTTONS */
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 13px; border: none; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #6a5ce8; }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+    .btn-danger { background: rgba(255,109,109,0.1); color: var(--red); border: 1px solid rgba(255,109,109,0.2); }
+    .btn-sm { padding: 5px 12px; font-size: 11px; }
+
+    /* PAGE TITLES */
+    .page-title { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px; }
+    .page-subtitle { color: var(--muted); margin-bottom: 32px; }
+    .section-label { font-size: 11px; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; }
+
+    /* STAT CARDS */
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+    .stat-value { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: var(--accent); line-height: 1; }
+    .stat-label { color: var(--muted); font-size: 12px; margin-top: 4px; }
+
+    /* TABLE */
+    table { width: 100%; border-collapse: collapse; }
+    thead th { text-align: left; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+    tbody tr { border-bottom: 1px solid rgba(30,30,46,0.5); transition: background 0.15s; }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+    tbody td { padding: 12px 14px; color: var(--muted); font-size: 13px; }
+    tbody td:first-child { color: var(--text); }
+
+    /* ALERT */
+    .alert { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
+    .alert-success { background: rgba(77,255,160,0.06); border: 1px solid rgba(77,255,160,0.2); color: var(--green); }
+    .alert-error { background: rgba(255,109,109,0.06); border: 1px solid rgba(255,109,109,0.2); color: var(--red); }
+    .alert-info { background: rgba(124,109,250,0.06); border: 1px solid rgba(124,109,250,0.2); color: var(--accent); }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 20px; font-size: 13px; z-index: 999; transform: translateY(80px); opacity: 0; transition: all 0.3s; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-color: rgba(77,255,160,0.3); color: var(--green); }
+    .toast.error { border-color: rgba(255,109,109,0.3); color: var(--red); }
+
+    /* FILTERS */
+    .filters { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
+    .filter-btn { padding: 6px 14px; border-radius: 100px; font-size: 12px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.2s; font-family: 'DM Mono', monospace; }
+    .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .filter-btn:hover:not(.active) { border-color: var(--accent); color: var(--text); }
+
+    /* STARS */
+    .stars { color: var(--yellow); font-size: 16px; }
+
+    /* DETAIL PAGE */
+    .detail-header { display: flex; gap: 24px; align-items: flex-start; margin-bottom: 32px; }
+    .detail-cover { width: 120px; height: 120px; border-radius: 12px; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 48px; flex-shrink: 0; }
+    .detail-info { flex: 1; }
+
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; max-width: 480px; width: 90%; position: relative; z-index: 1; }
+
+    /* PROGRESS BAR */
+    .progress { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin-top: 8px; }
+    .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+
+    @media (max-width: 640px) {
+      .grid-3, .grid-2, .grid-4 { grid-template-columns: 1fr; }
+      nav { padding: 14px 16px; }
+      .container { padding: 24px 16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+<div id="toast" class="toast"></div>
+
+<!-- MODAL LOGIN -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <h2 style="font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 8px;">Connexion</h2>
+    <p style="color: var(--muted); margin-bottom: 24px; font-size: 13px;">Mode demonstration — utilisez n'importe quel email</p>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input id="loginEmail" class="form-input" type="email" placeholder="admin@alecone.fr" value="admin@alecone.fr" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Mot de passe</label>
+      <input id="loginPassword" class="form-input" type="password" placeholder="••••••••" value="Admin1234!" />
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <button class="btn btn-primary" style="flex:1" onclick="doLogin()">Se connecter</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Annuler</button>
+    </div>
+    <p style="color: var(--muted); font-size: 11px; margin-top: 16px; text-align: center;">Demo : admin@alecone.fr / Admin1234!</p>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div onclick="showPage('home')" class="nav-logo">Alec<span>One</span></div>
+  <div class="nav-links">
+    <span class="demo-badge">Mode Demo</span>
+    <button class="nav-btn nav-btn-ghost" onclick="showPage('catalogue')">Catalogue</button>
+    <div id="navUser" style="display:none; align-items:center; gap:8px;">
+      <button class="nav-btn nav-btn-ghost" onclick="showPage('profile')">Mon profil</button>
+      <button class="nav-btn nav-btn-ghost" onclick="showPage('admin')" style="color: var(--accent); border-color: var(--accent);">Admin</button>
+      <button class="nav-btn nav-btn-danger" onclick="doLogout()">Deconnexion</button>
+    </div>
+    <div id="navGuest">
+      <button class="nav-btn nav-btn-primary" onclick="openModal()">Connexion</button>
+    </div>
+    <a href="../index.html" class="nav-btn nav-btn-ghost">← Portfolio</a>
+  </div>
+</nav>
+
+<!-- ==================== PAGE HOME ==================== -->
+<div id="page-home" class="page active">
+  <div class="container">
+    <div style="text-align: center; padding: 80px 0 60px;">
+      <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(77,255,160,0.08); border: 1px solid rgba(77,255,160,0.2); color: var(--green); padding: 6px 14px; border-radius: 100px; font-size: 12px; margin-bottom: 32px;">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;"></span>
+        Demonstration interactive
+      </div>
+      <h1 style="font-family: 'Syne', sans-serif; font-size: clamp(42px, 7vw, 72px); font-weight: 800; letter-spacing: -2px; line-height: 1; margin-bottom: 24px;">
+        AlecOne<br><span style="color: var(--accent);">Ressources</span><br><span style="color: transparent; -webkit-text-stroke: 1px rgba(232,232,240,0.3);">Educatives</span>
+      </h1>
+      <p style="max-width: 500px; margin: 0 auto 40px; color: var(--muted); font-size: 15px; line-height: 1.8;">Plateforme de gestion de ressources educatives — Backend Symfony 7 + React TypeScript + JWT + MySQL</p>
+      <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+        <button class="btn btn-primary" onclick="showPage('catalogue')">Explorer le catalogue →</button>
+        <button class="btn btn-ghost" onclick="openModal()">Se connecter</button>
+      </div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom: 48px;">
+      <div class="stat-card"><div class="stat-value" id="statResources">8</div><div class="stat-label">Ressources</div></div>
+      <div class="stat-card"><div class="stat-value" id="statPlaylists">3</div><div class="stat-label">Playlists</div></div>
+      <div class="stat-card"><div class="stat-value" id="statUsers">5</div><div class="stat-label">Utilisateurs</div></div>
+      <div class="stat-card"><div class="stat-value" id="statBorrows">2</div><div class="stat-label">Emprunts actifs</div></div>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div style="font-size: 32px; margin-bottom: 12px;">📚</div>
+        <h3 style="font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 8px;">Catalogue</h3>
+        <p style="color: var(--muted); font-size: 13px; margin-bottom: 16px;">Parcourez les ressources par type, playlist ou categorie. Filtres et tri en temps reel.</p>
+        <button class="btn btn-ghost" style="width:100%" onclick="showPage('catalogue')">Voir le catalogue →</button>
+      </div>
+      <div class="card">
+        <div style="font-size: 32px; margin-bottom: 12px;">🔐</div>
+        <h3 style="font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 8px;">Authentification JWT</h3>
+        <p style="color: var(--muted); font-size: 13px; margin-bottom: 16px;">Connexion securisee avec token JWT. Roles ROLE_USER et ROLE_ADMIN.</p>
+        <button class="btn btn-ghost" style="width:100%" onclick="openModal()">Se connecter →</button>
+      </div>
+      <div class="card">
+        <div style="font-size: 32px; margin-bottom: 12px;">⚙️</div>
+        <h3 style="font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 8px;">Back Office Admin</h3>
+        <p style="color: var(--muted); font-size: 13px; margin-bottom: 16px;">Tableau de bord, CRUD ressources, gestion des emprunts et utilisateurs.</p>
+        <button class="btn btn-ghost" style="width:100%" onclick="openModal()">Acceder →</button>
+      </div>
+    </div>
+
+    <div style="margin-top: 48px; padding: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px;">
+      <p class="section-label">// Stack technique</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+        <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--muted); padding: 4px 10px; border-radius: 4px; font-size: 11px;">PHP 8.2 / Symfony 7</span>
+        <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--muted); padding: 4px 10px; border-radius: 4px; font-size: 11px;">React 18 + TypeScript</span>
+        <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--muted); padding: 4px 10px; border-radius: 4px; font-size: 11px;">MySQL + Doctrine ORM</span>
+        <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--muted); padding: 4px 10px; border-radius: 4px; font-size: 11px;">JWT Authentication</span>
+        <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--muted); padding: 4px 10px; border-radius: 4px; font-size: 11px;">PHPUnit Tests</span>
+        <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--muted); padding: 4px 10px; border-radius: 4px; font-size: 11px;">GitHub Actions CI/CD</span>
+        <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--muted); padding: 4px 10px; border-radius: 4px; font-size: 11px;">SonarLint</span>
+        <span style="background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--muted); padding: 4px 10px; border-radius: 4px; font-size: 11px;">WampServer</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PAGE CATALOGUE ==================== -->
+<div id="page-catalogue" class="page">
+  <div class="container">
+    <p class="section-label">// Front Office</p>
+    <h1 class="page-title">Catalogue</h1>
+    <p class="page-subtitle">Explorez toutes les ressources disponibles</p>
+
+    <div class="filters">
+      <button class="filter-btn active" onclick="filterResources('tous', this)">Tous</button>
+      <button class="filter-btn" onclick="filterResources('Formation', this)">Formations</button>
+      <button class="filter-btn" onclick="filterResources('Livre', this)">Livres</button>
+      <button class="filter-btn" onclick="filterResources('Video', this)">Videos</button>
+    </div>
+
+    <div class="grid-3" id="catalogueGrid"></div>
+  </div>
+</div>
+
+<!-- ==================== PAGE DETAIL ==================== -->
+<div id="page-detail" class="page">
+  <div class="container">
+    <button class="btn btn-ghost" style="margin-bottom: 24px;" onclick="showPage('catalogue')">← Retour au catalogue</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<!-- ==================== PAGE PROFILE ==================== -->
+<div id="page-profile" class="page">
+  <div class="container">
+    <p class="section-label">// Mon compte</p>
+    <h1 class="page-title">Mon Profil</h1>
+    <p class="page-subtitle">Gerez vos emprunts et votre historique</p>
+
+    <div class="grid-2" style="margin-bottom: 32px;">
+      <div class="card">
+        <h3 style="font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 16px;">Informations</h3>
+        <p style="color: var(--muted); margin-bottom: 8px;"><strong style="color: var(--text);">Nom :</strong> Jordy Alec</p>
+        <p style="color: var(--muted); margin-bottom: 8px;"><strong style="color: var(--text);">Email :</strong> admin@alecone.fr</p>
+        <p style="color: var(--muted);"><strong style="color: var(--text);">Role :</strong> <span class="badge badge-accent">ROLE_ADMIN</span></p>
+      </div>
+      <div class="card">
+        <h3 style="font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 16px;">Statistiques</h3>
+        <p style="color: var(--muted); margin-bottom: 8px;"><strong style="color: var(--text);">Emprunts actifs :</strong> <span id="profileActiveBorrows">0</span></p>
+        <p style="color: var(--muted); margin-bottom: 8px;"><strong style="color: var(--text);">Total emprunts :</strong> <span id="profileTotalBorrows">0</span></p>
+        <p style="color: var(--muted);"><strong style="color: var(--text);">Limite :</strong> 3 emprunts simultanees</p>
+      </div>
+    </div>
+
+    <h2 style="font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 16px;">Mes emprunts</h2>
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <table>
+        <thead><tr><th>Ressource</th><th>Type</th><th>Emprunte le</th><th>A rendre le</th><th>Statut</th><th>Action</th></tr></thead>
+        <tbody id="profileBorrowsTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PAGE ADMIN ==================== -->
+<div id="page-admin" class="page">
+  <div class="container">
+    <p class="section-label">// Back Office</p>
+    <h1 class="page-title">Tableau de bord Admin</h1>
+    <p class="page-subtitle">Gestion complete de la plateforme AlecOne</p>
+
+    <div class="grid-4" style="margin-bottom: 32px;">
+      <div class="stat-card"><div class="stat-value" id="adminStatResources">8</div><div class="stat-label">Ressources</div></div>
+      <div class="stat-card"><div class="stat-value" id="adminStatPlaylists">3</div><div class="stat-label">Playlists</div></div>
+      <div class="stat-card"><div class="stat-value" id="adminStatUsers">5</div><div class="stat-label">Utilisateurs</div></div>
+      <div class="stat-card"><div class="stat-value" id="adminStatBorrows">2</div><div class="stat-label">Emprunts actifs</div></div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h2 style="font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700;">Gestion des ressources</h2>
+      <button class="btn btn-primary" onclick="showAddResourceForm()">+ Ajouter</button>
+    </div>
+
+    <div id="addResourceForm" style="display:none; margin-bottom: 24px;">
+      <div class="card">
+        <h3 style="font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 20px;">Nouvelle ressource</h3>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Titre</label>
+            <input id="newTitle" class="form-input" placeholder="Titre de la ressource" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Type</label>
+            <select id="newType" class="form-input">
+              <option value="Formation">Formation</option>
+              <option value="Livre">Livre</option>
+              <option value="Video">Video</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Playlist</label>
+            <select id="newPlaylist" class="form-input">
+              <option value="">Aucune playlist</option>
+              <option value="1">Developpement Web</option>
+              <option value="2">Base de donnees</option>
+              <option value="3">DevOps & Cloud</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date de publication</label>
+            <input id="newDate" class="form-input" type="date" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <input id="newDesc" class="form-input" placeholder="Description de la ressource" />
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-primary" onclick="addResource()">Creer la ressource</button>
+          <button class="btn btn-ghost" onclick="hideAddResourceForm()">Annuler</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <table>
+        <thead><tr><th>Titre</th><th>Type</th><th>Playlist</th><th>Statut</th><th>Actions</th></tr></thead>
+        <tbody id="adminResourcesTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== DONNEES SIMULEES ====================
+let state = {
+  user: null,
+  currentPage: 'home',
+  currentFilter: 'tous',
+  currentDetailId: null,
+  nextId: 9,
+};
+
+let data = {
+  playlists: [
+    { id: 1, name: 'Developpement Web' },
+    { id: 2, name: 'Base de donnees' },
+    { id: 3, name: 'DevOps & Cloud' },
+  ],
+  resources: [
+    { id: 1, title: 'Introduction a TypeScript', type: 'Formation', description: 'Cours complet pour apprendre TypeScript de zero, de la syntaxe de base aux types avances.', playlist: 1, isAvailable: true, publishedAt: '2026-01-15', rating: 4.5, reviews: 12, emoji: '📘' },
+    { id: 2, title: 'React 18 — Les nouveautes', type: 'Video', description: 'Decouvrez les nouvelles fonctionnalites de React 18 : concurrent mode, Suspense, transitions.', playlist: 1, isAvailable: false, publishedAt: '2026-02-10', rating: 4.8, reviews: 8, emoji: '🎬' },
+    { id: 3, title: 'Clean Architecture en PHP', type: 'Livre', description: 'Guide complet sur la Clean Architecture appliquee au developpement PHP/Symfony.', playlist: 1, isAvailable: true, publishedAt: '2025-11-20', rating: 4.2, reviews: 15, emoji: '📗' },
+    { id: 4, title: 'MySQL avance — Optimisation', type: 'Formation', description: 'Techniques d\'optimisation de requetes SQL, index, et performances MySQL.', playlist: 2, isAvailable: true, publishedAt: '2026-01-05', rating: 4.0, reviews: 6, emoji: '🗄️' },
+    { id: 5, title: 'Doctrine ORM en pratique', type: 'Video', description: 'Utilisation avancee de Doctrine ORM avec Symfony : relations, events, migrations.', playlist: 2, isAvailable: true, publishedAt: '2026-03-01', rating: 4.6, reviews: 9, emoji: '🎥' },
+    { id: 6, title: 'GitHub Actions CI/CD', type: 'Formation', description: 'Mise en place de pipelines CI/CD complets avec GitHub Actions pour vos projets.', playlist: 3, isAvailable: true, publishedAt: '2026-02-28', rating: 4.9, reviews: 20, emoji: '⚙️' },
+    { id: 7, title: 'Docker pour developpeurs', type: 'Livre', description: 'Containerisation de vos applications avec Docker et Docker Compose.', playlist: 3, isAvailable: false, publishedAt: '2025-12-15', rating: 4.3, reviews: 11, emoji: '🐳' },
+    { id: 8, title: 'API REST avec Symfony 7', type: 'Formation', description: 'Creation d\'APIs REST completes avec Symfony 7, JWT et les bonnes pratiques.', playlist: 1, isAvailable: true, publishedAt: '2026-03-10', rating: 4.7, reviews: 18, emoji: '🔌' },
+  ],
+  borrows: [],
+  users: [
+    { id: 1, name: 'Jordy Alec', email: 'admin@alecone.fr', role: 'ROLE_ADMIN' },
+    { id: 2, name: 'Marie Dupont', email: 'marie@alecone.fr', role: 'ROLE_USER' },
+    { id: 3, name: 'Pierre Martin', email: 'pierre@alecone.fr', role: 'ROLE_USER' },
+    { id: 4, name: 'Sophie Bernard', email: 'sophie@alecone.fr', role: 'ROLE_USER' },
+    { id: 5, name: 'Lucas Petit', email: 'lucas@alecone.fr', role: 'ROLE_USER' },
+  ]
+};
+
+// ==================== NAVIGATION ====================
+function showPage(page) {
+  if ((page === 'profile' || page === 'admin') && !state.user) {
+    openModal();
+    return;
+  }
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  state.currentPage = page;
+  if (page === 'catalogue') renderCatalogue();
+  if (page === 'profile') renderProfile();
+  if (page === 'admin') renderAdmin();
+  window.scrollTo(0, 0);
+}
+
+// ==================== AUTH ====================
+function openModal() { document.getElementById('loginModal').classList.add('open'); }
+function closeModal() { document.getElementById('loginModal').classList.remove('open'); }
+
+function doLogin() {
+  const email = document.getElementById('loginEmail').value;
+  state.user = { email, name: 'Jordy Alec', role: 'ROLE_ADMIN' };
+  document.getElementById('navUser').style.display = 'flex';
+  document.getElementById('navGuest').style.display = 'none';
+  closeModal();
+  showToast('Connexion reussie — Token JWT genere ✓', 'success');
+  showPage('profile');
+}
+
+function doLogout() {
+  state.user = null;
+  document.getElementById('navUser').style.display = 'none';
+  document.getElementById('navGuest').style.display = 'block';
+  showToast('Deconnexion reussie', 'success');
+  showPage('home');
+}
+
+// ==================== CATALOGUE ====================
+function getPlaylistName(id) {
+  const p = data.playlists.find(p => p.id === id);
+  return p ? p.name : 'Aucune';
+}
+
+function renderCatalogue() {
+  const grid = document.getElementById('catalogueGrid');
+  const filtered = state.currentFilter === 'tous'
+    ? data.resources
+    : data.resources.filter(r => r.type === state.currentFilter);
+
+  grid.innerHTML = filtered.map(r => `
+    <div class="card" onclick="showDetail(${r.id})" style="cursor:pointer;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+        <span style="font-size: 36px;">${r.emoji}</span>
+        <span class="badge ${r.isAvailable ? 'badge-green' : 'badge-red'}">${r.isAvailable ? 'Disponible' : 'Emprunte'}</span>
+      </div>
+      <h3 style="font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 6px;">${r.title}</h3>
+      <p style="color: var(--muted); font-size: 12px; margin-bottom: 8px;">${getPlaylistName(r.playlist)}</p>
+      <p style="color: var(--muted); font-size: 13px; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${r.description}</p>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span class="badge badge-accent">${r.type}</span>
+        <span style="color: var(--yellow); font-size: 13px;">★ ${r.rating} (${r.reviews})</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterResources(type, btn) {
+  state.currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCatalogue();
+}
+
+// ==================== DETAIL ====================
+function showDetail(id) {
+  state.currentDetailId = id;
+  const r = data.resources.find(r => r.id === id);
+  if (!r) return;
+  const isBorrowed = data.borrows.some(b => b.resourceId === id && b.status === 'EN_COURS');
+  const activeBorrows = data.borrows.filter(b => b.status === 'EN_COURS').length;
+
+  document.getElementById('detailContent').innerHTML = `
+    <div class="detail-header">
+      <div class="detail-cover">${r.emoji}</div>
+      <div class="detail-info">
+        <div style="display:flex; gap: 8px; margin-bottom: 8px;">
+          <span class="badge badge-accent">${r.type}</span>
+          <span class="badge ${r.isAvailable ? 'badge-green' : 'badge-red'}">${r.isAvailable ? 'Disponible' : 'Emprunte'}</span>
+        </div>
+        <h1 style="font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; margin-bottom: 8px;">${r.title}</h1>
+        <p style="color: var(--muted); margin-bottom: 8px;">Playlist : ${getPlaylistName(r.playlist)}</p>
+        <p style="color: var(--muted); margin-bottom: 16px;">Publie le : ${r.publishedAt}</p>
+        <p style="color: var(--muted); margin-bottom: 20px;">${r.description}</p>
+        ${state.user && r.isAvailable && !isBorrowed && activeBorrows < 3 ? `<button class="btn btn-primary" onclick="borrowResource(${r.id})">Emprunter cette ressource</button>` : ''}
+        ${state.user && isBorrowed ? `<button class="btn btn-danger" onclick="returnResource(${r.id})">Retourner la ressource</button>` : ''}
+        ${!state.user ? `<button class="btn btn-ghost" onclick="openModal()">Connectez-vous pour emprunter</button>` : ''}
+        ${state.user && activeBorrows >= 3 && !isBorrowed ? `<div class="alert alert-error">Limite de 3 emprunts simultanees atteinte</div>` : ''}
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 24px;">
+      <h2 style="font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 16px;">Avis — ★ ${r.rating}/5 (${r.reviews} avis)</h2>
+      <div class="progress"><div class="progress-fill" style="width: ${r.rating / 5 * 100}%"></div></div>
+      <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 12px;">
+        ${generateFakeReviews(r)}
+      </div>
+    </div>
+
+    ${state.user ? `
+    <div class="card">
+      <h3 style="font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 16px;">Laisser un avis</h3>
+      <div class="form-group">
+        <label class="form-label">Note (1-5)</label>
+        <input id="reviewRating" class="form-input" type="number" min="1" max="5" value="5" style="width: 80px;" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Commentaire</label>
+        <input id="reviewComment" class="form-input" placeholder="Votre avis sur cette ressource..." />
+      </div>
+      <button class="btn btn-primary" onclick="submitReview(${r.id})">Soumettre l'avis</button>
+    </div>
+    ` : ''}
+  `;
+  showPage('detail');
+}
+
+function generateFakeReviews(r) {
+  const names = ['Marie D.', 'Pierre M.', 'Sophie B.'];
+  const comments = ['Excellent contenu, tres bien explique !', 'Tres utile pour mes projets professionnels.', 'Je recommande vivement cette ressource.'];
+  return names.slice(0, 3).map((name, i) => `
+    <div style="padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid var(--border);">
+      <div style="display:flex; justify-content:space-between; margin-bottom: 6px;">
+        <strong style="font-size: 13px;">${name}</strong>
+        <span style="color: var(--yellow);">${'★'.repeat(Math.round(r.rating - i * 0.3 + 0.3))}</span>
+      </div>
+      <p style="color: var(--muted); font-size: 13px;">${comments[i]}</p>
+    </div>
+  `).join('');
+}
+
+// ==================== EMPRUNTS ====================
+function borrowResource(id) {
+  const activeBorrows = data.borrows.filter(b => b.status === 'EN_COURS').length;
+  if (activeBorrows >= 3) { showToast('Limite de 3 emprunts atteinte', 'error'); return; }
+  const r = data.resources.find(r => r.id === id);
+  if (!r || !r.isAvailable) { showToast('Ressource non disponible', 'error'); return; }
+  r.isAvailable = false;
+  const due = new Date(); due.setDate(due.getDate() + 14);
+  data.borrows.push({ id: Date.now(), resourceId: id, resourceTitle: r.title, resourceType: r.type, borrowedAt: new Date().toLocaleDateString('fr-FR'), dueAt: due.toLocaleDateString('fr-FR'), status: 'EN_COURS' });
+  updateStats();
+  showToast('Emprunt enregistre — A rendre le ' + due.toLocaleDateString('fr-FR') + ' ✓', 'success');
+  showDetail(id);
+}
+
+function returnResource(id) {
+  const borrow = data.borrows.find(b => b.resourceId === id && b.status === 'EN_COURS');
+  if (!borrow) return;
+  borrow.status = 'RETOURNE';
+  borrow.returnedAt = new Date().toLocaleDateString('fr-FR');
+  const r = data.resources.find(r => r.id === id);
+  if (r) r.isAvailable = true;
+  updateStats();
+  showToast('Ressource retournee avec succes ✓', 'success');
+  showDetail(id);
+}
+
+// ==================== PROFILE ====================
+function renderProfile() {
+  const userBorrows = data.borrows;
+  const active = userBorrows.filter(b => b.status === 'EN_COURS').length;
+  document.getElementById('profileActiveBorrows').textContent = active;
+  document.getElementById('profileTotalBorrows').textContent = userBorrows.length;
+
+  const tbody = document.getElementById('profileBorrowsTable');
+  if (userBorrows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 32px; color: var(--muted);">Aucun emprunt</td></tr>';
+    return;
+  }
+  tbody.innerHTML = userBorrows.map(b => `
+    <tr>
+      <td>${b.resourceTitle}</td>
+      <td><span class="badge badge-accent">${b.resourceType}</span></td>
+      <td>${b.borrowedAt}</td>
+      <td>${b.dueAt}</td>
+      <td><span class="badge ${b.status === 'EN_COURS' ? 'badge-yellow' : 'badge-green'}">${b.status}</span></td>
+      <td>${b.status === 'EN_COURS' ? `<button class="btn btn-danger btn-sm" onclick="returnResource(${b.resourceId}); renderProfile();">Retourner</button>` : '-'}</td>
+    </tr>
+  `).join('');
+}
+
+// ==================== ADMIN ====================
+function renderAdmin() {
+  updateStats();
+  const tbody = document.getElementById('adminResourcesTable');
+  tbody.innerHTML = data.resources.map(r => `
+    <tr>
+      <td>${r.emoji} ${r.title}</td>
+      <td><span class="badge badge-accent">${r.type}</span></td>
+      <td>${getPlaylistName(r.playlist)}</td>
+      <td><span class="badge ${r.isAvailable ? 'badge-green' : 'badge-red'}">${r.isAvailable ? 'Disponible' : 'Emprunte'}</span></td>
+      <td style="display:flex; gap:6px;">
+        <button class="btn btn-ghost btn-sm" onclick="showToast('Modification simulee ✓', 'success')">Modifier</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteResource(${r.id})">Supprimer</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function showAddResourceForm() { document.getElementById('addResourceForm').style.display = 'block'; document.getElementById('newDate').value = new Date().toISOString().split('T')[0]; }
+function hideAddResourceForm() { document.getElementById('addResourceForm').style.display = 'none'; }
+
+function addResource() {
+  const title = document.getElementById('newTitle').value.trim();
+  const type = document.getElementById('newType').value;
+  const playlist = parseInt(document.getElementById('newPlaylist').value) || null;
+  const date = document.getElementById('newDate').value;
+  const desc = document.getElementById('newDesc').value.trim();
+  if (!title) { showToast('Le titre est obligatoire', 'error'); return; }
+  const emojis = { Formation: '📘', Livre: '📗', Video: '🎬' };
+  data.resources.unshift({ id: state.nextId++, title, type, description: desc || 'Nouvelle ressource ajoutee via le back office admin.', playlist, isAvailable: true, publishedAt: date, rating: 0, reviews: 0, emoji: emojis[type] });
+  hideAddResourceForm();
+  renderAdmin();
+  updateStats();
+  showToast('Ressource creee avec succes ✓', 'success');
+}
+
+function deleteResource(id) {
+  if (!confirm('Supprimer cette ressource ?')) return;
+  data.resources = data.resources.filter(r => r.id !== id);
+  renderAdmin();
+  updateStats();
+  showToast('Ressource supprimee', 'success');
+}
+
+function submitReview(id) {
+  const rating = document.getElementById('reviewRating').value;
+  const comment = document.getElementById('reviewComment').value;
+  if (!comment) { showToast('Veuillez ecrire un commentaire', 'error'); return; }
+  showToast('Avis soumis — en attente de moderation ✓', 'success');
+  document.getElementById('reviewComment').value = '';
+}
+
+// ==================== STATS ====================
+function updateStats() {
+  const active = data.borrows.filter(b => b.status === 'EN_COURS').length;
+  document.getElementById('statResources').textContent = data.resources.length;
+  document.getElementById('statBorrows').textContent = active;
+  if (document.getElementById('adminStatResources')) {
+    document.getElementById('adminStatResources').textContent = data.resources.length;
+    document.getElementById('adminStatPlaylists').textContent = data.playlists.length;
+    document.getElementById('adminStatUsers').textContent = data.users.length;
+    document.getElementById('adminStatBorrows').textContent = active;
+  }
+}
+
+// ==================== TOAST ====================
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.className = 'toast', 3500);
+}
+
+// Init
+document.getElementById('newDate') && (document.getElementById('newDate').value = new Date().toISOString().split('T')[0]);
+</script>
+</body>
+</html>
