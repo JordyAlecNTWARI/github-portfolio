@@ -14,7 +14,7 @@ Etudiant en BTS SIO option SLAM, je suis passionne par le developpement logiciel
 
 ## Projets
 
-### AlecOne (`/projects/AlecOne` — [github.com/JordyAlecNTWARI/AlecOne](https://github.com/JordyAlecNTWARI/AlecOne))
+### AlecOne ([github.com/JordyAlecNTWARI/AlecOne](https://github.com/JordyAlecNTWARI/AlecOne))
 
 Plateforme full-stack de gestion de ressources educatives developpee en projet personnel 2026.
 
@@ -25,12 +25,16 @@ Plateforme full-stack de gestion de ressources educatives developpee en projet p
 - JWT (LexikJWTAuthenticationBundle)
 - Vite + React Router
 
-**Realisation :**
+**Realisations :**
 - API REST complete : ressources, playlists, categories, emprunts, avis et notes
 - Authentification JWT securisee avec roles (ROLE_USER, ROLE_ADMIN)
 - Frontend React avec routing, context authentification et pages admin
 - Back office : tableau de bord avec statistiques, CRUD ressources, gestion des emprunts
 - Systeme d'emprunt avec limite de 3 emprunts simultanees et echeance J+14
+- 6 tests PHPUnit (unitaires + integration)
+- Pipeline CI/CD GitHub Actions — SonarLint 0 issues
+
+Voir la demo : [jordyalecntwari.github.io/github-porfolio/alecone](https://jordyalecntwari.github.io/github-porfolio/alecone/)
 
 **Architecture du projet :**
 ```
@@ -46,16 +50,17 @@ AlecOne/
 │   │   ├── context/       # AuthContext (JWT token management)
 │   │   └── api/           # Client Axios configure
 │   └── vite.config.ts     # Proxy vers Symfony
-└── config/
-    ├── packages/security.yaml  # Firewalls et access_control
-    └── jwt/               # Cles RSA pour JWT
+├── tests/
+│   ├── Unit/              # Tests unitaires PHPUnit
+│   └── Integration/       # Tests d'integration PHPUnit
+└── .github/workflows/     # Pipeline CI/CD GitHub Actions
 ```
 
 ---
 
-### KYC Module — cbkl-labs
+### KYC Module — cbkl-labs (Stage 2026)
 
-Module KYC (Know Your Customer) developpe en Proof of Concept lors de mon stage en 2026.
+Module KYC (Know Your Customer) developpe en Proof of Concept lors de mon stage.
 
 **Stack technique :**
 - TypeScript, Bun, Hono
@@ -69,7 +74,7 @@ Module KYC (Know Your Customer) developpe en Proof of Concept lors de mon stage 
 - Scoring de risque automatique sur les demandes KYC
 - Workflow Git professionnel : branches `feature/`, commits conventionnels, PRs
 
-Voir le repo : prive (entreprise)
+Repo prive (entreprise)
 
 ---
 
@@ -89,6 +94,8 @@ Application web de gestion de mediatheque developpee dans le cadre de la formati
 
 Voir la demo : [jordyalecntwari.github.io/github-porfolio/mediatek](https://jordyalecntwari.github.io/github-porfolio/mediatek/)
 
+Voir le repo : [github.com/JordyAlecNTWARI/github-porfolio/tree/main/mediatek](https://github.com/JordyAlecNTWARI/github-porfolio/tree/main/mediatek)
+
 ---
 
 ## Competences
@@ -100,7 +107,9 @@ Voir la demo : [jordyalecntwari.github.io/github-porfolio/mediatek](https://jord
 | Backend | Symfony 7, Bun, Hono, API REST, JWT |
 | Architecture | Clean Architecture, SOLID, POO |
 | Base de donnees | MySQL, Doctrine ORM |
-| Outils | NX Monorepo, Git, GitHub, Linux, WebStorm |
+| Tests | PHPUnit (unitaires + integration) |
+| Outils | NX Monorepo, Git, GitHub, Linux, WebStorm, SonarLint |
+| CI/CD | GitHub Actions |
 
 ---
 
