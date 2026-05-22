@@ -2,7 +2,7 @@
 
 BTS SIO option SLAM · Developpeur Full-Stack · Passionne par TypeScript, PHP/Symfony et React
 
-Portfolio en ligne : [jordyalecntwari.github.io/github-porfolio](https://jordyalecntwari.github.io/github-porfolio/)
+Portfolio en ligne : [jordyalecntwari.github.io/github-portfolio](https://jordyalecntwari.github.io/github-portfolio/)
 
 ---
 
@@ -34,7 +34,7 @@ Plateforme full-stack de gestion de ressources educatives developpee en projet p
 - 6 tests PHPUnit (unitaires + integration)
 - Pipeline CI/CD GitHub Actions — SonarLint 0 issues
 
-Voir la demo : [jordyalecntwari.github.io/github-porfolio/alecone](https://jordyalecntwari.github.io/github-porfolio/alecone/)
+Voir la demo : [jordyalecntwari.github.io/github-portfolio/alecone](https://jordyalecntwari.github.io/github-portfolio/alecone/)
 
 **Architecture du projet :**
 ```
@@ -92,9 +92,9 @@ Application web de gestion de mediatheque developpee dans le cadre de la formati
 - Ajout, emprunt et retour de livres
 - Interface de demonstration avec donnees simulees
 
-Voir la demo : [jordyalecntwari.github.io/github-porfolio/mediatek](https://jordyalecntwari.github.io/github-porfolio/mediatek/)
+Voir la demo : [jordyalecntwari.github.io/github-portfolio/mediatek](https://jordyalecntwari.github.io/github-portfolio/mediatek/)
 
-Voir le repo : [github.com/JordyAlecNTWARI/github-porfolio/tree/main/mediatek](https://github.com/JordyAlecNTWARI/github-porfolio/tree/main/mediatek)
+Voir le repo : [github.com/JordyAlecNTWARI/github-portfolio/tree/main/mediatek](https://github.com/JordyAlecNTWARI/github-portfolio/tree/main/mediatek)
 
 ---
 
