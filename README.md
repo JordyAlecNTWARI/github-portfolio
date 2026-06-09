@@ -14,7 +14,7 @@ Etudiant en BTS SIO option SLAM, je suis passionne par le developpement logiciel
 
 ## Projets
 
-### AlecOne ([github.com/JordyAlecNTWARI/AlecOne](https://github.com/JordyAlecNTWARI/AlecOne))
+### AlecOne 
 
 Plateforme full-stack de gestion de ressources educatives developpee en projet personnel 2026.
 
