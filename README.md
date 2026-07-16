@@ -1,6 +1,6 @@
-# Jordy Alec — Portfolio Developpeur
+# Jordy Alec — Portfolio Développeur
 
-BTS SIO option SLAM · Developpeur Full-Stack · Passionne par TypeScript, PHP/Symfony, React et le developpement 3D
+Développeur full-stack junior — TypeScript, Symfony, React. Diplômé BTS SIO, je poursuis en Bachelor Développement Full-Stack à l'EPSI Nantes en alternance dès septembre 2026.
 
 Portfolio en ligne : [jordyalecntwari.github.io/github-portfolio](https://jordyalecntwari.github.io/github-portfolio/)
 
@@ -8,7 +8,7 @@ Portfolio en ligne : [jordyalecntwari.github.io/github-portfolio](https://jordya
 
 ## A propos
 
-Etudiant en BTS SIO option SLAM, passionne par le developpement logiciel, l'architecture applicative et les experiences web immersives. Ce portfolio regroupe mes projets realises en stage, en formation et en personnel.
+Développeur passionné par le développement logiciel, l'architecture applicative et les expériences web immersives. Ce portfolio regroupe mes projets réalisés en stage, en formation et en personnel.
 
 ---
 
@@ -16,28 +16,28 @@ Etudiant en BTS SIO option SLAM, passionne par le developpement logiciel, l'arch
 
 ### AlecOne — Boutique 3D E-commerce (Projet personnel 2026)
 
-Boutique e-commerce full-stack avec experiences 3D interactives. Chaque produit est visualisable en trois dimensions avant l'achat.
+Boutique e-commerce full-stack avec experiences 3D intéractives. Chaque produit est visualisable en trois dimensions avant l'achat.
 
 **Stack technique :**
 - PHP 8.2 / Symfony 7 — API REST JSON securisee par JWT
 - React 18 + TypeScript — Frontend SPA
-- Three.js + React Three Fiber + Drei — Experiences 3D interactives
+- Three.js + React Three Fiber + Drei — Experiences 3D intéractives
 - MySQL / Doctrine ORM
 - Stripe — Paiement par carte bancaire (Payment Intent)
 - Vite 5 + React Router
 
-**Realisations :**
-- Boutique avec mini viewer 3D par produit (modele selon categorie)
-- Page detail produit avec viewer 3D interactif a 360 degres
-- Systeme de panier avec compteur temps reel dans la navbar
-- Checkout avec recapitulatif et paiement Stripe Elements
-- Authentification JWT securisee avec intercepteur Axios automatique
+**Réalisations :**
+- Boutique avec mini viewer 3D par produit (modèle selon catégorie)
+- Page détail produit avec viewer 3D intéractif a 360 degrés
+- Système de panier avec compteur temps réel dans la navbar
+- Checkout avec récapitulatif et paiement Stripe Eléments
+- Authentification JWT sécurisée avec intercepteur Axios automatique
 - Historique des commandes
-- Catalogue de ressources educatives (videos, articles)
-- Page 404 personnalisee avec elements 3D
+- Catalogue de ressources éducatives (videos, articles)
+- Page 404 personnalisée avec eléments 3D
 - Pipeline CI/CD GitHub Actions — SonarLint 0 issues bloquantes
 
-Voir la demo : [jordyalecntwari.github.io/github-portfolio/alecone](https://jordyalecntwari.github.io/github-portfolio/alecone/)
+Voir la démo : [jordyalecntwari.github.io/github-portfolio/alecone](https://jordyalecntwari.github.io/github-portfolio/alecone/)
 
 **Architecture du projet :**
 ```
@@ -62,45 +62,45 @@ AlecOne/
 
 ### KYC Module — cbkl-labs (Stage 2026)
 
-Module KYC (Know Your Customer) developpe lors de mon stage chez CUBIKL S.A.S a Paris.
+Module KYC (Know Your Customer) développé lors de mon stage chez CUBIKL S.A.S à Paris.
 
 **Stack technique :**
 - TypeScript, Bun, Hono
 - NX Monorepo (`@cbkl/kyc`, `@cbkl/common`)
 - Clean Architecture (Domain / Application / Infrastructure / Adapters)
 
-**Realisations :**
-- Structuration d'un monorepo NX en packages independants
-- API REST avec pipeline OCR pour verification de documents d'identite
-- Entites metier : `KycRequest`, `OcrData`, `ScoringResult`
+**Réalisations :**
+- Structuration d'un monorepo NX en packages indépendants
+- API REST avec pipeline OCR pour vérification de documents d'identité
+- Entités métier : `KycRequest`, `OcrData`, `ScoringResult`
 - Moteur de scoring automatique sur les demandes KYC
 - Workflow Git professionnel : branches `feature/`, commits conventionnels, PRs avec review
 
-Repo prive (code confidentiel entreprise)
+Repo privé (code confidentiel entreprise)
 
 ---
 
 ### MediaTek86 (Projet scolaire BTS SIO)
 
-Application web de gestion de mediatheque developpee dans le cadre de la formation BTS SIO.
+Application web de gestion de médiathèque developpee dans le cadre de la formation BTS SIO.
 
 **Stack technique :**
 - PHP / Symfony (API REST backend)
 - HTML, CSS, JavaScript (frontend)
 - MySQL
 
-**Fonctionnalites :**
-- Catalogue de livres avec statut de disponibilite
+**Fonctionnalités :**
+- Catalogue de livres avec statut de disponibilité
 - Ajout, emprunt et retour de livres
-- Interface de demonstration avec donnees simulees
+- Interface de dmonstration avec données simulées
 
-Voir la demo : [jordyalecntwari.github.io/github-portfolio/mediatek](https://jordyalecntwari.github.io/github-portfolio/mediatek/)
+Voir la démo : [jordyalecntwari.github.io/github-portfolio/mediatek](https://jordyalecntwari.github.io/github-portfolio/mediatek/)
 
-Voir le repo : [github.com/JordyAlecNTWARI/github-portfolio/tree/main/mediatek](https://github.com/JordyAlecNTWARI/github-portfolio/tree/main/mediatek)
+Voir le repo : [github.com/JordyAlecNTWARI/Mediatek86](https://github.com/JordyAlecNTWARI/Mediatek86)
 
 ---
 
-## Competences
+## Compétences
 
 | Domaine | Technologies |
 |---|---|
