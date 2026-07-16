@@ -1,6 +1,6 @@
 # Jordy Alec — Portfolio Développeur
 
-Développeur full-stack junior — TypeScript, Symfony, React. Diplômé BTS SIO, je poursuis en Bachelor Développement Full-Stack à l'EPSI Nantes en alternance dès septembre 2026.
+Développeur full-stack junior spécialisé TypeScript, PHP/Symfony et React. Passé par un stage en fintech et plusieurs projets full-stack, j'entre en Bachelor Développement Full-Stack (alternance) à l'EPSI Nantes en septembre 2026.
 
 Portfolio en ligne : [jordyalecntwari.github.io/github-portfolio](https://jordyalecntwari.github.io/github-portfolio/)
 
